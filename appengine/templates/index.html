@@ -1,123 +1,44 @@
 <!DOCTYPE html>
 <html xmlns:fb="http://ogp.me/ns/fb#">
-<head>
-<title>Spartify</title>
-<link href="/static/spartify.css" rel="stylesheet">
-<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<link rel="apple-touch-icon" href="/static/ios-icon.png">
-<script>
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-26827170-1']);
-  _gaq.push(['_setDomainName', 'spartify.com']);
-  _gaq.push(['_setAllowLinker', true]);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
-</head>
+    <head>
+        <meta charset="utf-8" />
+        <title>Spartify</title>
+        <link href="/static/spartify.css" rel="stylesheet" />
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <link rel="apple-touch-icon" href="/static/ios-icon.png" />
+    </head>
 <body>
-<section id="intro">
-	<img class="p-main" id="logo" src="/static/spartify.png">
-	<h1><a class="go-main" href="/">Spartify</a></h1>
-	<p class="p-main" id="info">Host a Party and let guests choose what songs to play on <a href="http://www.spotify.com/">Spotify</a>. No more huddling in front of one computer or messing up the queue! What if they're all drunk? Don't worry, We'll fill it up for ya!
-</section>
-<section class="p-main" id="actions">
-	<p id="continue" style="display: none;"><button class="nav">Continue XXXXX</button>
-	<ul id="fb-parties"></ul>
-	<p><button class="nav" id="go-join">Join a party</button>
-	<p><button class="nav create" id="start">Start a party!</button>
-	<div id="facebook-login">
-		<p>Log in with Facebook to find parties you're attending
-		<p><fb:login-button scope="user_events" show-faces="true" width="200" max-rows="1"></fb:login-button>
-	</div>
-</section>
-<section class="p-join" id="party-joiner">
-	<p><input id="join-party-code" placeholder="Enter party code here">
-	<p><button class="nav create" id="join">Join!</button>
-	<p><button class="nav go-main">Go back</button>
-</section>
-<section class="p-party" id="party-room">
-	<p id="party-code">Party code goes here
-	<p><input id="search" placeholder="Search for songs">
-	<ul class="song-list" id="results"></ul>
-	<h2>Queue</h2>
-	<ul class="song-list" id="queue"></ul>
-	<p><button class="nav cancel go-main">Leave party :(</button>
-</section>
-<section class="p-about" id="about">
-	<h2>About</h2>
-	<p>Spartify was developed at the <a href="http://boston.musichackday.org/2011/">Music Hack Day
-	Boston '11</a> by <a href="http://twitter.com/blixt" title="@blixt">Andreas Blixt</a>
-	and <a href="http://twitter.com/ricardovice" title="@ricardovice">Ricardo Vice Santos</a>.
-	<p>The idea of Spartify came from the way people tend to fight over who gets to choose the next
-	song in front of the computer when using <a href="http://www.spotify.com/">Spotify</a> at a party.
-	Or even worse: when someone just puts on a song that they want to listen to in the middle of an
-	already playing song!
-	<p>Spartify intends to fix this by letting anyone with a smart phone go to www.spartify.com and enter
-	the "party code", and then vote up the song(s) they want to hear next.
-	<p>For updates you can <a href="http://twitter.com/Spartify" title="@Spartify">follow @Spartify</a>
-	on Twitter.
-</section>
-<section id="derp">
-	<p>By <a href="http://twitter.com/blixt" title="@blixt">Andreas Blixt</a> and <a href="http://twitter.com/ricardovice" title="@ricardovice">Ricardo Vice Santos</a> for <a href="http://boston.musichackday.org/2011/">Music Hack Day Boston '11</a>.
-	<p>Follow <a href="http://twitter.com/Spartify" title="@Spartify">@Spartify</a> for updates, or <a class="go-about" href="/about">read more about Spartify here</a>.
-	<p><a href="http://the.echonest.com/"><img alt="Powered by The Echo Nest" src="http://the.echonest.com/media/images/logos/EN_P_on_White_Horizontal.gif"></a>
-</section>
-<iframe id="open" style="display: none;"></iframe>
-<script src="/static/jquery-1.7.min.js"></script>
-<script src="/static/spartify.js"></script>
-<div id="fb-root"></div>
-<script>
-window.fbAsyncInit = function() {
-	FB.init({
-		appId: '373051182734312',
-		status: true,
-		cookie: true,
-		xfbml: true
-    });
-
-	function checkEvents() {
-		FB.api('/me/events', function(res) {
-			console.log(res);
-			if (!res.data) return;
-			var events = {};
-			var eventIds = res.data.map(function(evt) { events[evt.id] = evt; return evt.id; });
-			spartify.api.findParties(eventIds, function(result) {
-				for (var eventId in result) {
-					$('#fb-parties').append(
-						$('<li>').append(
-							$('<a>')
-								.attr('href', '/' + result[eventId])
-								.text(events[eventId].name)));
-				}
-			}, null);
-		});
-	}
-
-	FB.getLoginStatus(function(res) {
-		if (res.status == 'connected') {
-			checkEvents();
-		} else {
-			FB.Event.subscribe('auth.login', function(res) {
-				checkEvents();
-			});
-		}
-	});
-};
-
-(function(d) {
-	var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-	if (d.getElementById(id)) { return; }
-	js = d.createElement('script'); js.id = id; js.async = true;
-	js.src = '//connect.facebook.net/en_US/all.js';
-	ref.parentNode.insertBefore(js, ref);
-}(document));
-</script>
+    <section id="intro">
+    	<h1><a class="go-main" href="/">Spartify</a></h1>
+    	<p class="p-main" id="info">Willkommen zu Spartify.</p>
+    </section>
+    <section class="p-main" id="actions">
+    	<p id="continue" style="display: none;"><button class="nav">Continue XXXXX</button></p>
+    	<p><button class="nav" id="go-join">Join a party</button></p>
+    	<p><button class="nav create" id="start">Start a party!</button></p>
+    </section>
+    <section class="p-join" id="party-joiner">
+    	<p><input id="join-party-code" placeholder="Enter party code here"></p>
+    	<p><button class="nav create" id="join">Join!</button></p>
+    	<p><button class="nav go-main">Go back</button></p>
+    </section>
+    <section class="p-party" id="party-room">
+    	<p id="party-code">Party code goes here</p>
+    	<p><input id="search" placeholder="Search for songs" /></p>
+    	<ul class="song-list" id="results"></ul>
+    	<h2>Queue</h2>
+    	<ul class="song-list" id="queue"></ul>
+    	<p><button class="nav cancel go-main">Leave party</button></p>
+    </section>
+    <section id="derp">
+    	<p>By <a href="http://twitter.com/blixt" title="@blixt">Andreas Blixt</a> and <a href="http://twitter.com/ricardovice" title="@ricardovice">Ricardo Vice Santos</a> for <a href="http://boston.musichackday.org/2011/">Music Hack Day Boston '11</a>.</p>
+    	<p>Follow <a href="http://twitter.com/Spartify" title="@Spartify">@Spartify</a> for updates.</p>
+    	<p><a href="http://the.echonest.com/"><img alt="Powered by The Echo Nest" src="http://the.echonest.com/media/images/logos/EN_P_on_White_Horizontal.gif"></a></p>
+    </section>
+    <iframe id="open" style="display: none;"></iframe>
+    <script src="/static/jquery-1.7.min.js"></script>
+    <script src="/static/spartify.js"></script>
 </body>
 </html>

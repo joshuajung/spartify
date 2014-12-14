@@ -105,7 +105,7 @@ var spartify = function () {
     var path = location.pathname;
     history.pushState(state, title, url);
     if (location.pathname != path) {
-      _gaq.push(['_trackPageview', location.pathname]);
+      //_gaq.push(['_trackPageview', location.pathname]);
     }
   };
 
