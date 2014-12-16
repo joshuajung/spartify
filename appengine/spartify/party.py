@@ -41,13 +41,15 @@ def exists(party_id):
     return True if party_id in stores.parties else False
 
 def create(event_id):
-    party_id = create_id(size=5)
+    # party_id = create_id(size=5)
+    party_id = "FIXED"
     stores.parties[party_id] = {'event_id': event_id}
     # quick and dirty
     stores.events[event_id] = {'party_id': party_id}
     return party_id, [], '0'
 
 def join(party_id):
+    party_id = "FIXED"
     guest_id = create_id()
     party = Party(party_id)
     return guest_id, party.get_event_id(), party.get_queue()

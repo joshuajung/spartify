@@ -1,5 +1,6 @@
 import json
 import config
+import logging
 from google.appengine.api import memcache
 from google.appengine.ext import db
 
@@ -59,6 +60,7 @@ class DataStore:
 
     def __getitem__(self, key):
         key = self._parse_key(key)
+        logging.info(key)
         data = memcache.get(key)
         if data is None:
             try:
@@ -84,12 +86,12 @@ class DataStore:
         key = self._parse_key(key)
         value = json.dumps(value)
         timeout = config.CACHE_DEFAULT_TIMEOUT if timeout < 0 else timeout
-        memcache.set(key, value, timeout) 
+        memcache.set(key, value, timeout)
         if self._persistent:
             StoreNode.set(key, value, self._collection)
 
 
 votes = DataStore('vote', False)
-parties = DataStore('party') 
-events = DataStore('events') 
-queues = DataStore('queue') 
+parties = DataStore('party')
+events = DataStore('events')
+queues = DataStore('queue')
