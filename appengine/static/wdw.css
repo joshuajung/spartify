@@ -1,0 +1,190 @@
+* {
+    font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background-color: #eee;
+}
+
+#header {
+    background-color: #632AA5;
+    text-align: center;
+    color: white;
+    margin: 0;
+    top: 0;
+    height: 60px;
+    width: 100%;
+    position: absolute;
+}
+
+h1 {
+    margin: 0;
+    padding: 13px;
+    font-size: 25px;
+    font-family: "Lobster", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 400;
+}
+
+h2 {
+    font-size: 20px;
+    font-family: "Lobster", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 400;
+}
+
+#searchArea {
+    position: absolute;
+    top: 60px;
+    width: 100%;
+    height: 60px;
+    background-color: #632AA5;
+    padding: 0 30px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    z-index: 2;
+    overflow: hidden;
+    transition: height 300ms;
+    -moz-transition: height 300ms;
+    -webkit-transition: height 300ms;
+}
+
+#searchArea.shown {
+    height: 100% !important;
+}
+
+#searchArea h2 {
+    text-align: center;
+    color: white;
+    padding-top: 20px;
+}
+
+#searchArea input {
+    padding: 10px;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#searchArea #emptySearch {
+    position: absolute;
+    z-index: 3;
+    height: 20px;
+    width: 20px;
+    top: 11px;
+    right: 40px;
+    visibility: hidden;
+}
+
+.song-list {
+    width: 100%;
+    padding: 0px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    list-style-type: none;
+
+    display: block;
+    position: relative;
+    transition: height 300ms;
+    -moz-transition: height 300ms;
+    -webkit-transition: height 300ms;
+}
+
+#search {
+    height: 236px;
+    border: 1px solid #ccc;
+    height: 46px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.song-list li {
+    line-height: 17px;
+    font-size: 13px;
+    display: block;
+    border: 1px #ccc solid;
+    padding: 5px 8px 5px 5px;
+    height: 46px;
+    cursor: pointer;
+    background-image: url("/static/thumbsup_grey.png");
+    background-size: 20px 20px;
+    background-position: right center;
+    background-repeat: no-repeat;
+    background-color: white;
+    background-origin: content-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    position: absolute;
+    transition: top 500ms;
+    -moz-transition: top 500ms;
+    -webkit-transition: top 500ms;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    width: 100%;
+}
+
+.song-list li.voted {
+    background-image: url("/static/thumbsup_color.png");
+}
+
+#queueArea {
+    padding: 0 30px;
+    position: absolute;
+    width: 100%;
+    top: 120px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#queueArea h2 {
+    text-align: center;
+    padding-top: 0px;
+    color: #333;
+}
+
+.song-list#queue {
+    height: 181px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.song-list#queue li.nowPlaying {
+    background-image: url("/static/play.png");
+    background-size: 20px 20px;
+    background-position: right center;
+    background-repeat: no-repeat;
+    background-color: #ecdbff;
+}
+
+.title {
+    font-weight: bold;
+}
+
+input, input:focus {
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    outline: none;
+}
+
+#footer {
+    font-size: 10px;
+    width: 100%;
+    position: absolute;
+    bottom: 10px;
+    text-align: center;
+    color: #333;
+}
+
+a {
+    color: #333;
+}

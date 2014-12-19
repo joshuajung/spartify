@@ -1,24 +1,86 @@
 <!DOCTYPE html>
-<html xmlns:fb="http://ogp.me/ns/fb#">
-    <head>
+<html lang="en">
+<head>
         <meta charset="utf-8" />
-        <title>Spartify</title>
-        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-        <link rel="apple-touch-icon" href="/static/ios-icon.png" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="format-detection" content="telephone=no" />
+        <!-- iPhone 6+, iOS 7, retina -->
+        <link href="/static/ios/icon180.png"
+        sizes="180x180"
+        rel="apple-touch-icon">
+        <!-- iPhone, iOS 7, retina -->
+        <link href="/static/ios/icon120.png"
+        sizes="120x120"
+        rel="apple-touch-icon">
+        <!-- iPhone ,iOS 6, retina -->
+        <link href="/static/ios/icon114.png"
+        sizes="114x114"
+        rel="apple-touch-icon">
+        <!-- iPhone, iOS 7 -->
+        <link href="/static/ios/icon60.png"
+        sizes="60x60"
+        rel="apple-touch-icon">
+        <!-- iPhone, iOS 6 -->
+        <link href="/static/ios/icon57.png"
+        sizes="57x57"
+        rel="apple-touch-icon">
+        <!-- iPhone 6+ -->
+        <link href="/static/ios/splash2148.png"
+        media="(device-width: 414px) and (device-height: 736px)
+        and (-webkit-device-pixel-ratio: 3)"
+        rel="apple-touch-startup-image">
+        <!-- iPhone 6 -->
+        <link href="/static/ios/splash1294.png"
+        media="(device-width: 375px) and (device-height: 667px)
+        and (-webkit-device-pixel-ratio: 2)"
+        rel="apple-touch-startup-image">
+        <!-- iPhone 5 -->
+        <link href="/static/ios/splash1096.png"
+        media="(device-width: 320px) and (device-height: 568px)
+        and (-webkit-device-pixel-ratio: 2)"
+        rel="apple-touch-startup-image">
+        <!-- iPhone, retina -->
+        <link href="/static/ios/splash960.png"
+        media="(device-width: 320px) and (device-height: 480px)
+        and (-webkit-device-pixel-ratio: 2)"
+        rel="apple-touch-startup-image">
+        <!-- iPhone -->
+        <link href="/static/ios/splash480.png"
+        media="(device-width: 320px) and (device-height: 480px)
+        and (-webkit-device-pixel-ratio: 1)"
+        rel="apple-touch-startup-image">
+        <link rel="icon" type="image/x-icon" href="/static/ios/icon120.png" />
+        <title>Wünsch dir was</title>
+        <link href='http://fonts.googleapis.com/css?family=Lobster|Roboto:700,400' rel='stylesheet' type='text/css' />
+        <link rel="stylesheet" type="text/css" href="/static/normalize.css" />
+        <link rel="stylesheet" type="text/css" href="/static/fastclick.js" />
+        <link rel="stylesheet" type="text/css" href="/static/wdw.css" />
+        <script src="/static/jquery-1.11.1.min.js"></script>
+        <script src="/static/fastclick.js"></script>
     </head>
 <body>
-    <section class="p-party" id="party-room">
-        <h2>Song Search</h2>
-    	<p><input id="search" placeholder="Search for songs" /></p>
-    	<ul class="song-list" id="results"></ul>
-    	<h2>Queue</h2>
+    <div id="header">
+        <h1>Wünsch dir was</h1>
+    </div>
+    <div id="searchArea">
+        <img id="emptySearch" src="/static/empty.png" />
+        <input id="search" placeholder="Titel suchen..." autocomplete="off" />
+        <div id="searchResults">
+            <h2 id="searchHeading">Suchergebnisse</h2>
+    	    <ul class="song-list" id="results"></ul>
+        </div>
+    </div>
+    <div id="queueArea">
+    	<h2 id="queueHeading">Playlist</h2>
     	<ul class="song-list" id="queue"></ul>
-    	<p><button class="nav cancel go-main">Leave party</button></p>
-    </section>
+    </div>
+    <div id="footer">
+        <p>Based on <a href="http://spartify.com">Spartify</a> by Andreas Blixt and Ricardo Vice Santos</p>
+    </div>
     <iframe id="open" style="display: none;"></iframe>
-    <script src="/static/jquery-1.7.min.js"></script>
     <script src="/static/spartify.js"></script>
 </body>
 </html>

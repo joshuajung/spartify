@@ -29,13 +29,15 @@ class Queue(object):
         return len(self._queue)
 
     def add(self, track, votes=0):
-        self._queue.append((track, votes,))
-        self._save()
+        pos = index_of(self._queue, track['uri'], lambda x: x[0]['uri'])
+        if pos is None:
+            self._queue.append((track, votes,))
+            self._save()
 
     @property
     def all(self):
         return (track for track, votes in self._queue)
- 
+
     def pop(self):
         try:
             track, votes = self._queue.pop(0)
@@ -43,7 +45,7 @@ class Queue(object):
         except IndexError:
             track, votes = None, None
         return track, votes
-    
+
     def vote(self, track_uri):
         pos = index_of(self._queue, track_uri, lambda x: x[0]['uri'])
         if pos is None:

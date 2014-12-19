@@ -17,9 +17,9 @@ class AsyncValue:
 
 
 class StoreNode(db.Model):
-    value = db.StringProperty()
+    value = db.TextProperty()
     # These aren't readable just yet
-    collection = db.StringProperty()
+    collection = db.TextProperty()
     created = db.DateTimeProperty(auto_now_add=True)
     updated = db.DateTimeProperty(auto_now=True)
 
@@ -60,7 +60,6 @@ class DataStore:
 
     def __getitem__(self, key):
         key = self._parse_key(key)
-        logging.info(key)
         data = memcache.get(key)
         if data is None:
             try:

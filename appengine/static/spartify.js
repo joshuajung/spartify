@@ -88,7 +88,7 @@ var spartify = function () {
     var playing;
 
     // Aktueller Queue-Inhalt
-    var queue;
+    var queue = [];
 
     // Aktuelle Queue-Version
     var queueVersion;
@@ -158,7 +158,6 @@ var spartify = function () {
 
     // Navigation per direktem Pfad (nur beim ersten Aufrufen der Seite)
     function goByPath(path) {
-        console.log("goByPath");
         switch (path) {
             // Redirect
             case '':
@@ -166,9 +165,8 @@ var spartify = function () {
                 break;
             // Aufrufen des Root-Pfads: Bitte in Party eintreten
             case '/':
-                console.log("Case '/'");
                 joinParty("FIXED", function () {
-                    console.log("Die Party konnte nicht betreten werden. Ggf. existiert sie noch nicht?")
+                    alert("Die Party konnte nicht betreten werden. Ggf. existiert sie noch nicht?")
                 });
                 break;
             // Party anlegen und als Master eintreten
@@ -178,7 +176,7 @@ var spartify = function () {
                     setIsMaster(data.id, true);
                     joinParty(data.id);
                 }, function () {
-                    console.log("Die Party konnte nicht gestartet werden.")
+                    alert("Die Party konnte nicht gestartet werden.")
                 });
                 break;
         }
@@ -242,8 +240,6 @@ var spartify = function () {
         queue = data.queue;
         queueVersion = data.version;
 
-        $('#party-room h2').toggle(queue.length > 0);
-
         // Aktualisiert dargestellte Song-Queue
         fillSongList(container, queue);
 
@@ -253,38 +249,58 @@ var spartify = function () {
     // Stellt die Queue oder die Suchergebnisse im DOM dar
     function fillSongList(list, songs) {
 
-        list.css('height', songs.length * 50);
         var lis = list.children('li'), traversed = [];
-        lis.removeClass('first last');
 
+        var number_broken = 0;
         for (var i = 0; i < songs.length; i++) {
             var song = songs[i],
             li = list.children('li[data-uri="' + song.uri + '"]');
 
             if (!song || !song.uri) {
                 console.error('Broken song', song, songs);
+                number_broken++;
                 return;
             }
-
             if (!li.length) {
                 li = $('<li>')
                 .data('song', song)
                 .attr('data-uri', song.uri)
                 .append(
-                    $('<span class="title">').text(song.title),
-                    $('<span class="artist">').text(song.artist),
-                    $('<span class="vote">+1</span>'))
-                    .appendTo(list);
+                    $('<span class="title">').text(abbreviate(song.title,30)),
+                    $('<br />'),
+                    $('<span class="artist">').text(abbreviate(song.artist,30)))
+                .appendTo(list);
             } else {
                 traversed.push(li[0]);
             }
 
-            if (i == 0) li.addClass('first');
-            if (i == songs.length - 1) li.addClass('last');
-
-            li.css('top', i * 50);
+            li.css('top', (i - number_broken) * 45);
+            if(i == 0) {
+                li.addClass("nowPlaying");
+            }
         }
+
         lis.not(traversed).remove();
+
+        // Überschriften
+        var numberOfResults = songs.length - number_broken;
+        if(numberOfResults > 0) {
+            // Songs gefunden
+            if(list.attr("id") == "results") {
+                $("#searchHeading").text("Treffer");
+            } else if(list.attr("id") == "queue") {
+                $("#queueHeading").text("Playlist");
+            }
+        } else {
+            // Keine Songs gefunden
+            if(list.attr("id") == "results") {
+                $("#searchHeading").text("Keine Treffer");
+            } else if(list.attr("id") == "queue") {
+                $("#queueHeading").text("Keine Titel auf der Playlist");
+            }
+
+        }
+
     }
 
 
@@ -295,23 +311,22 @@ var spartify = function () {
         var song = queue[0];
         if (playing == song.uri) return;
 
-        var duration = song.length * 1000 - 50,
+        var duration = song.length * 1000;
         li = $('#queue li[data-uri="' + song.uri + '"]');
-
+/*
         setTimeout(function () {
             var ids = [];
             for (var i = 0; i < queue.length; i++) {
                 ids.push(queue[i].uri.split(':')[2]);
             }
             var tracksetUri = 'spotify:trackset:Spartify:' + ids;
-            console.log(tracksetUri);
-        }, duration - 5000);
-
+        }, duration - 4000);
+*/
         li.css('progress', 0);
         li.animate({progress: 100}, {
-            duration: duration,
+            duration: duration + 1000,
             step: function (now, fx) {
-                var decl = '0, #ffa ' + now + '%, #ffe ' + now + '%';
+                var decl = '0, #d2abff ' + now + '%, #ecdbff ' + now + '%';
                 $(fx.elem)
                 .css('background', 'linear-gradient(' + decl + ')')
                 .css('background', '-moz-linear-gradient(' + decl + ')')
@@ -328,40 +343,56 @@ var spartify = function () {
 
         // Triggert Spotify, entweder per IFrame oder direkt
         playing = song.uri;
-        if ($.browser.webkit) {
-            $('#open').attr('src', playing);
+        $('#open').attr('src', playing);
+
+    }
+
+    function abbreviate(string, maxLength) {
+        if(string.length > maxLength) {
+            return string.substring(0, maxLength) + "...";
         } else {
-            location.href = playing;
+            return string;
         }
+    }
+
+    function showSearchResults() {
+        var searchArea = $("#searchArea").addClass('shown');
+        $("#emptySearch").css("visibility", "visible");
+    }
+
+    function hideSearchResults() {
+        $("#search").val("");
+        var searchArea = $("#searchArea").removeClass('shown');
+        $("#emptySearch").css("visibility", "hidden");
     }
 
     // Für Song Abstimmen oder neuen hinzufügen
     function vote(song) {
+        hideSearchResults();
+
         var code = getPartyCode();
-        spartify.api.vote(code, getUserId() || 'NO_USER_ID_' + code, song.uri,
-        function () {
+        spartify.api.vote(code, getUserId() || 'NO_USER_ID_' + code, song.uri, function () {
             queueVersion = undefined;
             deferGetSongs();
-        },
-        function () {
+        }, function () {
             queueVersion = undefined;
             deferGetSongs();
         });
 
+        /*
         // Simulate the addition of the track to make UI feel snappier.
         for (var i = 0; i < queue.length; i++) {
             if (queue[i].uri == song.uri) return;
         }
         queue.push(song);
         fillSongList(container, queue);
+        */
 
-        // TODO(blixt): Refactor away this duplicate code.
-        $('#party-room h2').toggle(queue.length > 0);
     }
 
 
     // Party-Page UI
-    $('.song-list li').live('click', function () {
+    $(document).on('click', '.song-list li', function () {
         var li = $(this);
 
         // Limit clicking on an item to once per 1 sec.
@@ -390,11 +421,13 @@ var spartify = function () {
             clearTimeout(timeout);
             if (query) {
                 timeout = setTimeout(search, 50);
+                showSearchResults();
             } else {
                 results.empty();
-                results.css('height', 0);
+                hideSearchResults();
             }
         }
+
 
         // Songsuche durchführen
         function search() {
@@ -414,7 +447,7 @@ var spartify = function () {
         function handleResults(tracks) {
             var songs = [];
             for (var i = 0; i < tracks.length; i++) {
-                if (i >= 5) break;
+                if (i >= 4) break;
                 var song = tracks[i];
                 songs.push({
                     album: song.album.name,
@@ -427,6 +460,12 @@ var spartify = function () {
             fillSongList(results, songs);
         }
 
+
+        $("#emptySearch").on('click', function() {
+            field.val("");
+            hideSearchResults();
+        });
+
         field.on('change keydown keypress keyup', handler);
 
     })();
@@ -434,4 +473,21 @@ var spartify = function () {
     // Initiale Navigation durchführen
     goByPath(location.pathname);
 
+    window.onresize = function(event) {
+        resizeQueueHeight();
+    }
+
+    function resizeQueueHeight() {
+        var vph = $(window).innerHeight();
+        var queueHeight = vph - 60 - 60 - 23 - 83;
+        $("#queue").css("height", queueHeight);
+    }
+
+    resizeQueueHeight();
+
+
 })();
+
+$(function() {
+    FastClick.attach(document.body);
+});

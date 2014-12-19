@@ -1,4 +1,6 @@
 import config
+import logging
+import copy
 
 from spartify import stores
 from spartify.util import create_id
@@ -12,14 +14,15 @@ class Party(object):
         self._queue = Queue(self.id)
 
     def pop_track(self):
-        track, votes = self._queue.pop()
-        if not track:
-            # queue is empty, should never happen...
-            return None
-        if len(self._queue) < config.PARTY_QUEUE_PANIC:
-            for t in find_similar_tracks(self._queue.all):
+        research_base = copy.deepcopy(self._queue)
+        missing_tracks = config.PARTY_QUEUE_PANIC - (len(self._queue) - 1);
+        logging.info("Es fehlen " + str(missing_tracks) + " Tracks");
+        if(missing_tracks > 0):
+            for t in find_similar_tracks(research_base.all, missing_tracks):
+                logging.info("Track hinzugefuegt")
                 # add simillar track to queue, no votes.
                 self._queue.add(t.to_dict(), 0)
+        track, votes = self._queue.pop()
         return track
 
     def get_queue(self, version=None):
