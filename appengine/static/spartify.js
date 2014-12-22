@@ -324,7 +324,7 @@ var spartify = function () {
 */
         li.css('progress', 0);
         li.animate({progress: 100}, {
-            duration: duration + 1000,
+            duration: duration,
             step: function (now, fx) {
                 var decl = '0, #d2abff ' + now + '%, #ecdbff ' + now + '%';
                 $(fx.elem)
@@ -379,14 +379,13 @@ var spartify = function () {
             deferGetSongs();
         });
 
-        /*
+
         // Simulate the addition of the track to make UI feel snappier.
         for (var i = 0; i < queue.length; i++) {
             if (queue[i].uri == song.uri) return;
         }
         queue.push(song);
         fillSongList(container, queue);
-        */
 
     }
 
